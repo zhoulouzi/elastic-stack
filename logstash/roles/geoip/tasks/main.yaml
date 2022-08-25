@@ -1,0 +1,29 @@
+---
+- name: mkdir geoip dir
+  file:
+    path: /opt/geoip/
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  tags: init-logstash
+    
+- name: copy geoip.sh
+  copy:
+    src: ./files/geoip.sh
+    dest: /opt/geoip/geoip.sh
+    mode: 0755
+  tags: init-logstash
+
+- name: add crontab job
+  cron:
+    name: "update_geoip_data"
+    minute: "00"
+    hour: "00"
+    day: "18"
+    job: "/bin/bash /opt/geoip/geoip.sh &>/dev/null"
+  tags: init-logstash
+
+- name: get geoip data
+  shell: /bin/bash /opt/geoip/geoip.sh &>/dev/null
+

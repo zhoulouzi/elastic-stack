@@ -1,0 +1,16 @@
+# This file is where you define your pipelines. You can define multiple.
+# For more information on multiple pipelines, see the documentation:
+#   https://www.elastic.co/guide/en/logstash/current/multiple-pipelines.html
+
+- pipeline.id: bdg
+  path.config: "/etc/logstash/pipeline.d/bdg.conf"
+- pipeline.id: dba
+  path.config: "/etc/logstash/pipeline.d/dba.conf"
+- pipeline.id: op
+  path.config: "/etc/logstash/pipeline.d/op.conf"
+- pipeline.id: project
+  path.config: "/etc/logstash/pipeline.d/project.conf"
+- pipeline.id: ai
+  path.config: "/etc/logstash/pipeline.d/ai.conf"
+- pipeline.id: arch
+  path.config: "/etc/logstash/pipeline.d/arch.conf"

@@ -1,0 +1,17 @@
+---
+- name: systemd start logstash
+  systemd:
+    state: started
+    name: logstash
+    daemon_reload: yes
+    enabled: yes
+  when:
+    - ansible_facts['distribution_major_version'] == "7"  
+
+- name: systemd restart logstash
+  systemd:
+    state: restarted
+    name: logstash
+  when:
+    - ansible_facts['distribution_major_version'] == "7" 
+  
