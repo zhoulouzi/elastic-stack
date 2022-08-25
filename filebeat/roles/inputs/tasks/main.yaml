@@ -1,0 +1,13 @@
+- name: sync filebeat.yml
+  template:
+    src: templates/{{ inputs_template }}.yml
+    dest: /etc/filebeat/inputs.d/{{ inputs_type }}.yml
+  when:
+    - inputs_template != "mix_container" and inputs_template != "container"
+
+- name: sync filebeat.yml
+  template:
+    src: templates/{{ inputs_template }}.yml
+    dest: /etc/filebeat/inputs.d/container.yml
+  when:
+    - inputs_template == "container" or inputs_template == "mix_container"

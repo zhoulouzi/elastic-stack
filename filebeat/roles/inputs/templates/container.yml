@@ -1,0 +1,17 @@
+- type: container
+  enabled: true
+  paths:
+    - {{ inputs_logpath }}
+  processors:
+  - add_docker_metadata:
+      host: "unix:///var/run/docker.sock"
+      labels.dedot: true
+  fields:
+    type: filebeat_container_{{ inputs_business }}_{{ inputs_project }}_{{ inputs_environment }}
+    business: {{ inputs_business }}
+    environment: {{ inputs_environment }}
+    project: {{ inputs_project }}
+    gear: {{ inputs_gear }}
+    store: {{ inputs_store }}
+    severity: {{ inputs_severity }}
+  fields_under_root: true

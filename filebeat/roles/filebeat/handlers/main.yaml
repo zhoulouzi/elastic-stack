@@ -1,0 +1,32 @@
+---
+- name: systemd start filebeat
+  systemd:
+    state: started
+    name: filebeat
+    daemon_reload: yes
+    enabled: yes
+  when:
+    - ansible_facts['distribution_major_version'] == "7" or ansible_facts['distribution_major_version'] == "16"
+
+- name: service start filebeat
+  service:
+    state: started
+    name: filebeat
+    enabled: yes
+  when:
+    - ansible_facts['distribution_major_version'] == "6" or ansible_facts['distribution_major_version'] == "14"
+
+- name: systemd restart filebeat
+  systemd:
+    state: restarted
+    name: filebeat
+  when:
+    - ansible_facts['distribution_major_version'] == "7" or ansible_facts['distribution_major_version'] == "16"
+
+- name: service restart filebeat
+  service:
+    state: restarted
+    name: filebeat
+    enabled: yes
+  when:
+    - ansible_facts['distribution_major_version'] == "6" or ansible_facts['distribution_major_version'] == "14"

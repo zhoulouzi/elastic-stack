@@ -1,0 +1,4 @@
+- hosts: danduanzhuang
+  gather_facts: yes
+  roles:
+    - filebeat

@@ -1,0 +1,22 @@
+# https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-input-log.html#_literal_max_bytes_literal
+- type: log
+  enabled: true
+  paths:
+    - {{ inputs_logpath }}
+  scan_frequency: 10s
+  fields:
+    type: {{ inputs_type }}
+    business: {{ inputs_business }}
+    environment: {{ inputs_environment }}
+    project: {{ inputs_project }}
+    gear: {{ inputs_gear }}
+    store: {{ inputs_store }}
+    severity: {{ inputs_severity }}
+  fields_under_root: true
+  multiline.pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}'
+  multiline.negate: true
+  multiline.match: after
+  multiline.max_lines: 500
+  multiline.timeout: 5s
+  max_bytes: 1048576
+  close_inactive: 2h

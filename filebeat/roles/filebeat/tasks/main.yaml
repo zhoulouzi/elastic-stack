@@ -1,0 +1,92 @@
+- name: copy rpm for filebeat
+  copy:
+    src: files/filebeat-7.3.0-x86_64.rpm
+    dest: /tmp/filebeat-7.3.0-x86_64.rpm
+  tags: init-filebeat
+  when:
+    - ansible_facts['distribution'] == "CentOS"
+
+- name: install filebeat rpm
+  yum:
+    name: /tmp/filebeat-7.3.0-x86_64.rpm
+    state: present
+  tags: init-filebeat
+  when:
+    - ansible_facts['distribution'] == "CentOS"
+
+- name: copy deb for filebeat
+  copy:
+    src: files/filebeat-7.5.1-amd64.deb
+    dest: /tmp/filebeat-7.5.1-amd64.deb
+  tags: init-filebeat
+  when:
+    - ansible_facts['distribution'] == "Ubuntu"
+
+- name: install filebeat deb
+  apt:
+    deb: /tmp/filebeat-7.5.1-amd64.deb
+    state: present
+  tags: init-filebeat
+  when:
+    - ansible_facts['distribution'] == "Ubuntu"
+
+- name: add filebeat systemd service
+  copy:
+    src: templates/filebeat.service
+    dest: /usr/lib/systemd/system/filebeat.service
+  tags: init-filebeat
+  when:
+    - ansible_distribution == "Centos" and ansible_facts['distribution_major_version'] == "7"
+
+- name: add filebeat systemd service
+  copy:
+    src: templates/filebeat.service
+    dest: /lib/systemd/system/filebeat.service
+  tags: init-filebeat
+  when:
+    - ansible_distribution == "Ubuntu" and ansible_facts['distribution_major_version'] == "16"
+
+- name: add filebeat.yml
+  copy:
+    src: templates/filebeat.yml
+    dest: /etc/filebeat/filebeat.yml
+  tags: init-filebeat
+  notify:
+  - systemd start filebeat
+  - service start filebeat
+
+- name: make inputs.d
+  file:
+    path: /etc/filebeat/inputs.d/
+    state: directory
+    owner: root
+    group: root
+    mode: 0644
+  tags: init-filebeat
+
+- name: sync filebeat.yml
+  copy:
+    src: templates/filebeat.yml
+    dest: /etc/filebeat/filebeat.yml
+  tags: sync-filebeat
+
+- name: remove filebeat
+  yum:
+    name: filebeat
+    state: absent
+  tags: del-filebeat
+
+- name: clean filebeat files and directories
+  file:
+    path: "{{ item }}"
+    state: absent
+  tags: del-filebeat
+  loop:
+    - /usr/share/filebeat/
+    - /etc/filebeat/
+    - /var/lib/filebeat/
+    - /var/log/filebeat
+
+
+
+
