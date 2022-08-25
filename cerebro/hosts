@@ -1,0 +1,11 @@
+# Init-only
+[cerebro-init]
+host1 ansible_host=192.168.1.1 JVM_HEAPSIZE=8g
+
+# Maintain
+[cerebro]
+host1 ansible_host=192.168.1.1 JVM_HEAPSIZE=8g
+
+[cluster:children]
+cerebro-init
+cerebro

@@ -1,0 +1,11 @@
+---
+# install cerebro
+- name: copy rpm for cerebro
+  copy:
+    src: ../../../packages/cerebro-0.8.4-1.noarch.rpm
+    dest: /tmp/cerebro-0.8.4-1.noarch.rpm
+
+- name: install cerebro rpm
+  yum:
+    name: /tmp/cerebro-0.8.4-1.noarch.rpm
+    state: present
