@@ -1,0 +1,27 @@
+---
+# Remember, leave a key empty if there is no value.  None will be a string,
+# not a Python "NoneType"
+#
+# Also remember that all examples have 'disable_action' set to True.  If you
+# want to use this action as a template, be sure to set this to False after
+# copying it.
+actions:
+# system index clean action
+  1:
+    action: delete_indices
+    description: ".(monitoring|watcher)-(logstash|es|kibana|history)-.*"
+    options:
+      ignore_empty_list: True
+      continue_if_exception: False
+      disable_action: False
+      allow_ilm_indices: true
+    filters:
+    - filtertype: pattern
+      kind: regex
+      value: '^\.monitoring-(logstash|es|kibana)-.*$'
+    - filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m.%d'
+      unit: days
+      unit_count: 15

@@ -1,0 +1,51 @@
+---
+- name: add elasticsearch's official YUMGPG key
+  rpm_key:
+    key: https://packages.elastic.co/GPG-KEY-elasticsearch
+    state: present
+
+- name: add elasticsearch curator repository
+  yum_repository:
+    name: elasticsearch_curator_repository
+    description: elasticsearch curator repository
+    baseurl: https://packages.elastic.co/curator/5/centos/7
+    enabled: true
+    gpgcheck: true
+
+- name: install elasticsearch curator
+  yum:
+    name: elasticsearch-curator
+    state: present
+
+- name: make /etc/curator/
+  file:
+    path: /etc/curator/
+    state: directory
+    owner: root
+    group: root
+    mode: 0644
+
+- name: copy curator.yaml
+  copy:
+    src: templates/curator.yaml
+    dest: /etc/curator/curator.yaml
+
+- name: copy action.yaml
+  copy:
+    src: templates/action.yaml
+    dest: /etc/curator/action.yaml
+  tags: sync_curator
+
+- name: make sure crontab
+  cron:
+    name: "add curator crontab job"
+    minute: "0"
+    hour: "1"
+    day: "*/1"
+    job: "/usr/bin/curator --config /etc/curator/curator.yaml /etc/curator/action.yaml >> /var/log/curator.log 2>&1"
+    state: present
+
+- name: logrotate config for /var/log/curator.log
+  copy:
+    src: templates/curator.logrotate
+    dest: /etc/logrotate.d/curator

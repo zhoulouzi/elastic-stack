@@ -1,0 +1,39 @@
+- hosts: master-init
+  gather_facts: yes
+  roles:
+    - master
+
+- hosts: coordinate-init
+  gather_facts: yes
+  roles:
+    - coordinate
+
+- hosts: hot-init
+  gather_facts: yes
+  roles:
+    - hot
+
+- hosts: warm-init
+  gather_facts: yes
+  roles:
+    - warm
+
+- hosts: cold-init
+  gather_facts: yes
+  roles:
+    - cold
+
+- hosts: ingest-init
+  gather_facts: yes
+  roles:
+    - ingest
+
+- hosts: kibana-init
+  gather_facts: yes
+  roles:
+    - kibana
+
+- hosts: curator-init
+  gather_facts: yes
+  roles:
+    - curator

@@ -1,0 +1,15 @@
+cluster_name: elastic
+coordinate_lb: 172.16.0.1
+ingest_lb: 172.16.0.1
+kibana_lb: 172.16.0.1
+warm_data_paths:
+  - {elasticsearchdir: '/apps1/elasticsearch'}
+hot_data_paths:
+  - {elasticsearchdir: '/apps/elasticsearch'}
+  #- {elasticsearchdir: '/apps1/elasticsearch'}
+cold_data_paths:
+  - {elasticsearchdir: '/apps1/elasticsearch'}
+  - {elasticsearchdir: '/apps2/elasticsearch'}
+  - {elasticsearchdir: '/apps3/elasticsearch'}
+  - {elasticsearchdir: '/apps4/elasticsearch'}
+

@@ -1,0 +1,20 @@
+---
+# installkibana 
+- name: copy rpm for kibana 
+  copy:
+    src: ../../../packages/kibana-7.4.0-x86_64.rpm
+    dest: /tmp/kibana-7.4.0-x86_64.rpm
+
+- name: install kibana  rpm
+  yum:
+    name: /tmp/kibana-7.4.0-x86_64.rpm
+    state: present
+  
+- name: generate configfile form templates
+  template:
+    src: "templates/{{item.filename}}"
+    dest: "/etc/kibana/{{item.destpath}}"
+  loop:
+    - {filename: 'kibana.yml', destpath: 'kibana.yml'}
+  notify:
+    - start kibana

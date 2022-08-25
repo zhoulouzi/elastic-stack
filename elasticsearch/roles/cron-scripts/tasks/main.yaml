@@ -1,0 +1,26 @@
+- name: pip install elasticsearch
+  shell: pip3 install elasticsearch
+
+- name: make /etc/elasticsearch-script/
+  file:
+    path: /etc/elasticsearch-script/
+    state: directory
+    owner: root
+    group: root
+    mode: 0644
+
+- name: copy script
+  copy:
+    src: files/{{ item }}
+    dest: /etc/elasticsearch-script/{{ item }}
+  loop:
+    - create-index-ahead.py
+
+- name: make sure crontab
+  cron:
+    name: "create index ahead"
+    minute: "0"
+    hour: "3"
+    day: "*/1"
+    job: "/usr/bin/python3 /etc/elasticsearch-script/create-index-ahead.py -e {{ ingest_lb }}:9200 -u elastic -p elastic -l 500 -i 20 >> /var/log/create-index-ahead.log 2>&1"
+    state: present

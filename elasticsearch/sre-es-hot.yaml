@@ -1,0 +1,4 @@
+- hosts: hot-init
+  gather_facts: yes
+  roles:
+    - hot

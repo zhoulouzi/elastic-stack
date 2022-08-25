@@ -1,0 +1,51 @@
+---
+# install elasticsearch 
+- name: copy rpm forelasticsearch 
+  copy:
+    src: ../../../packages/elasticsearch-7.4.0-x86_64.rpm
+    dest: /tmp/elasticsearch-7.4.0-x86_64.rpm
+
+- name: install elasticsearch rpm
+  yum:
+    name: /tmp/elasticsearch-7.4.0-x86_64.rpm
+    state: present
+  
+- name: mkdir for override.conf
+  file:
+    name: /etc/systemd/system/elasticsearch.service.d/
+    state: directory
+    mode: 0644
+    
+- name: copy systemd override.conf
+  copy:
+    src: ./files/override.conf
+    dest: /etc/systemd/system/elasticsearch.service.d/override.conf
+    mode: 0644
+
+- name: copy elastic-certificates.p12
+  copy:
+    src:  ../../../certs/elastic-certificates.p12
+    dest: /etc/elasticsearch/elastic-certificates.p12
+    mode: 0600
+    owner: root
+    group: elasticsearch
+
+- name: copy elastic-certificates.p12
+  copy:
+    src:  ../../../certs/elastic-certificates.p12
+    dest: /etc/elasticsearch/elastic-certificates.p12
+    mode: 0660
+    owner: root
+    group: elasticsearch
+
+- name: generate configfile form templates
+  template:
+    src: "templates/{{item.filename}}"
+    dest: "/etc/elasticsearch/{{item.destpath}}"
+  loop:
+    - {filename: 'elasticsearch.yml', destpath: 'elasticsearch.yml'}
+    - {filename: 'jvm.options', destpath: 'jvm.options'}
+  notify:
+    - start elasticsearch
+  tags:
+    - sync-config

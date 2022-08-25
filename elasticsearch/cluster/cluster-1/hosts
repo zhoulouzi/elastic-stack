@@ -1,0 +1,62 @@
+# pre install
+[master-init]
+host1 ansible_host=192.168.1.1 JVM_HEAPSIZE=4g
+
+[coordinate-init]
+
+[curator-init]
+
+[kibana-init]
+
+[ingest-init]
+host1 ansible_host=192.168.1.1
+
+[hot-init]
+host1 ansible_host=192.168.1.1
+
+[warm-init]
+host1 ansible_host=192.168.1.1
+
+[cold-init]
+host1 ansible_host=192.168.1.1
+
+# after install
+
+[master]
+host1 ansible_host=192.168.1.1
+
+[coordinate]
+host1 ansible_host=192.168.1.1
+
+[curator]
+host1 ansible_host=192.168.1.1
+
+[script]
+host1 ansible_host=192.168.1.1
+
+[kibana]
+host1 ansible_host=192.168.1.1
+
+[ingest]
+host1 ansible_host=192.168.1.1
+
+[hot]
+host1 ansible_host=192.168.1.1
+
+[warm]
+host1 ansible_host=192.168.1.1
+
+[cold]
+host1 ansible_host=192.168.1.1
+
+[node:children]
+hot
+warm
+cold
+
+[cluster:children]
+master
+coordinate
+ingest
+node
+init

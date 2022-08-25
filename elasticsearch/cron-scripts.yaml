@@ -1,0 +1,4 @@
+- hosts: script
+  gather_facts: no
+  roles:
+    - cron-scripts
