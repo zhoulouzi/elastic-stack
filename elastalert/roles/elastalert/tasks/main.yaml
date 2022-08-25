@@ -1,0 +1,47 @@
+---
+# 1. wget wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
+# 2. yum install python36 python36-devel -y
+# 3. curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+# 4. python3 get-pip.py
+# 5. pip3 install setuptools urllib3 PyYAML elastalert==0.2.1 elasticsearch>=7.0.0
+
+- name: make /etc/elastalert/
+  file:
+    path: /etc/elastalert/
+    state: directory
+    owner: root
+    group: root
+    mode: 0644
+
+- name: make /etc/elastalert/rules/
+  file:
+    path: /etc/elastalert/rules/
+    state: directory
+    owner: root
+    group: root
+    mode: 0644
+
+- name: copy config.yaml
+  copy:
+    src: files/config.yaml
+    dest: /etc/elastalert/config.yaml
+  tags: sync_elastalert
+
+- name: copy rules
+  copy:
+    src: files/rules
+    dest: /etc/elastalert/
+  tags: sync_elastalert
+
+# need pre step
+- name: pre elastalert-create-index
+  shell: /usr/bin/elastalert-create-index --config /etc/elastalert/config.yaml
+
+- name: copy systemd config
+  copy:
+    src: files/systemd.service
+    dest: /usr/lib/systemd/system/elastalert.service
+  notify:
+    - systemd start elastalert
+  when:
+    - ansible_facts['distribution_major_version'] == "7"

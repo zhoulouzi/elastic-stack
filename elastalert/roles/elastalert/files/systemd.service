@@ -1,0 +1,24 @@
+# Service definition for ElastAlert
+#
+[Unit]
+Description=ElastAlert - Easy & Flexible Alerting With Elasticsearch
+Documentation=https://elastalert.readthedocs.io
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+Restart=on-failure
+StandardError=syslog
+WorkingDirectory=/etc/elastalert/
+ExecStart=/usr/bin/python3 -m elastalert.elastalert --config /etc/elastalert/config.yaml  --verbose
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+
+
+

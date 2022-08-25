@@ -1,0 +1,4 @@
+- hosts: elastalert-init
+  gather_facts: yes
+  roles:
+    - elastalert

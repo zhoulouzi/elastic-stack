@@ -1,0 +1,33 @@
+name: api http error alert
+es_host: 192.168.1.1
+es_port: 9200
+es_username: elastic
+es_password: elastic
+index: filebeat-*
+type: frequency
+num_events: 5
+timeframe:
+  minutes: 1
+query_key: method
+include: ["type", "_index", "host", "level", "msg", "tracer-id", "thread", "env", "timestamp_log"]
+filter:
+  - term:
+      level: "error"
+
+alert:
+  - email
+  - command
+alert_subject: "Log monitor: {0}  接口: {1},  1分钟内大于 {5} 次"
+alert_subject_args:
+  - name
+  - method
+  - num_events
+
+email:
+  - zhouzichen@example.com
+
+smtp_host: "smtpproxy.example.com"
+smtp_port: 25
+from_addr: "elastalert@example.com"
+
+command: [""]
